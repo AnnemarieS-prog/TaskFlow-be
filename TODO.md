@@ -7,12 +7,12 @@
 	- [ ] API Documentation Instructions
 	- [ ] Project Structure/Architecture
 	- [ ] Contact Information
-- [ ] db connection
+- [x] db connection
 - [ ] test setup
 - [ ] CI/CD
 ## Version 1.0
-- [ ] task CRUD
-- [ ] task interactions (done & simple prioritize)
+- [x] task CRUD
+- [x] task interactions (done & simple prioritize)
 - [ ] user CRUD
 - [ ] simple auth (?)
 - [ ] task list CRUD
@@ -40,4 +40,6 @@
 - [ ] advanced priorization
 - [ ] reminder
 - [ ] safe (!) authorization
+- [ ] search function
+- [ ] undo action (within session)
 ...
