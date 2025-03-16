@@ -15,7 +15,7 @@
 - [x] task interactions (done & simple prioritize)
 - [x] task list CRUD
 - [x] task list interactions (add, remove & move tasks)
-- [ ] structural cleanup
+- [x] structural cleanup
 ### Version 1.0.5
 - [ ] user CRUD
 - [ ] authorization
