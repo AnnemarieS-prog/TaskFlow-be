@@ -1,9 +1,8 @@
-﻿using api.Data;
-using api.Dtos.Task;
+﻿using api.Dtos.Task;
 using api.Mappers;
+using api.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers;
 
@@ -11,89 +10,98 @@ namespace api.Controllers;
 [ApiController]
 public class TaskController : ControllerBase
 {
-    private readonly ApplicationDBContext _context;
+    private readonly ITaskService _service;
 
-    public TaskController(ApplicationDBContext context)
+    public TaskController(ITaskService service)
     {
-        _context = context;
+        _service = service;
     }
 
     [HttpGet]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        var tasks = _context.Tasks
-            .Where(t => t.DeletedAt == null)
-            .Select(t => t.ToTaskDto())
-            .ToList();
+        try
+        {
+            var tasks = await _service.GetAll();
 
-        return Ok(tasks);
+            return Ok(tasks.Select(t => t.ToTaskDto()).ToList());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] CreateTaskRequestDto taskDto)
+    public async Task<IActionResult> Create([FromBody] CreateTaskRequestDto taskDto)
     {
-        var taskModel = taskDto.ToTaskFromCreateDto();
+        try
+        {
+            var task = await _service.Create(taskDto);
 
-        _context.Tasks.Add(taskModel);
-        _context.SaveChanges();
-
-        return CreatedAtAction(nameof(GetById), new {id = taskModel.Id }, taskModel.ToTaskDto());
+            return CreatedAtAction(nameof(GetById), new { id = task.Id }, task.ToTaskDto());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetById([FromRoute] int id)
+    public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var task = _context.Tasks
-            .Where(t => t.DeletedAt == null)
-            .FirstOrDefault(t => t.Id == id);
-
-        if (task == null) return NotFound();
-
-        return Ok(task.ToTaskDto());
+        try
+        {
+            var task = await _service.GetByIdAsync(id);
+            return Ok(task.ToTaskDto());
+        } 
+        catch (KeyNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpPut("{id}")]
-    public IActionResult UpdateById([FromRoute] int id, [FromBody] UpdateTaskRequestDto taskDto) 
+    public async Task<IActionResult> UpdateById([FromRoute] int id, [FromBody] UpdateTaskRequestDto taskDto) 
     {
-        var task = _context.Tasks
-            .Where(t => t.DeletedAt == null)
-            .FirstOrDefault(t => t.Id == id);
-
-        if (task == null) return NotFound();
-
-        // TODO: post auth-impl => change to Forbid()
-        if (task.IsCompleted) return Conflict(new { message = "You're trying to update a task that has already been completed!"});
-
-        task.Title = taskDto.Title ?? task.Title;
-        task.Description = taskDto.Description ?? task.Description;
-        task.IsCompleted = taskDto.IsCompleted ?? task.IsCompleted;
-        task.IsPrioritized = taskDto.IsPrioritized ?? task.IsPrioritized;
-
-        var entry = _context.Entry(task);
-        if (entry.Properties.Any(p => p.IsModified))
+        try
         {
-            task.UpdatedAt = DateTime.UtcNow;
-            _context.SaveChanges();
-
+            var task = await _service.Update(id, taskDto);
             return Ok(task.ToTaskDto());
-        } else
+        }
+        catch (KeyNotFoundException e)
         {
-            return BadRequest("No changes requested.");
+            return NotFound(e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            return Conflict(e.Message);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
         }
     }
 
     [HttpDelete("{id}")]
-    public IActionResult DeleteById([FromRoute] int id)
+    public async Task<IActionResult> DeleteById([FromRoute] int id)
     {
-        var task = _context.Tasks
-            .Where(t => t.DeletedAt == null)
-            .FirstOrDefault(t => t.Id == id);
-
-        if (task == null) return NotFound();
-
-        task.DeletedAt = DateTime.UtcNow;
-        _context.SaveChanges();
-        
-        return NoContent();
+        try
+        {
+            await _service.DeleteByIdAsync(id);
+            return NoContent();
+        }
+        catch (KeyNotFoundException e)
+        {
+            return NotFound(e.Message);
+        } 
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 }

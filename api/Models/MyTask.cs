@@ -1,8 +1,10 @@
+using api.Interfaces;
+
 namespace api.Models;
 
 // had to add prefix to circumvent confusion with 
 // System.Threading.Tasks.Task
-public class MyTask
+public class MyTask : IUpdateable
 {
     public int Id { get; set; }
     public int? TaskListId { get; set; }
@@ -17,8 +19,6 @@ public class MyTask
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; }
     public DateTime? DeletedAt { get; set; }
-
-    public bool IsDeleted => DeletedAt != null;
 
     public MyTask(string title, string? description)
     {

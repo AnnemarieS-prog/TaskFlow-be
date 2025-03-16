@@ -1,6 +1,4 @@
-﻿using api.Dtos.TaskList;
-
-namespace api.Dtos.Task;
+﻿namespace api.Dtos.Task;
 
 public class TaskDto
 {

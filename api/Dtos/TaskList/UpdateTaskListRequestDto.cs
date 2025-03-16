@@ -1,7 +1,6 @@
-﻿namespace api.Dtos.TaskList
+﻿namespace api.Dtos.TaskList;
+
+public class UpdateTaskListRequestDto
 {
-    public class UpdateTaskListRequestDto
-    {
-        public required string Title { get; set; }
-    }
+    public required string Title { get; set; }
 }

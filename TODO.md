@@ -13,14 +13,12 @@
 ## Version 1.0
 - [x] task CRUD
 - [x] task interactions (done & simple prioritize)
-- [ ] user CRUD
-- [ ] simple auth
 - [x] task list CRUD
 - [x] task list interactions (add, remove & move tasks)
+- [ ] structural cleanup
 ### Version 1.0.5
-- [ ] safe authorization
-- [ ] architecture review
-	- [ ] necessary refactorings
+- [ ] user CRUD
+- [ ] authorization
 - [ ] transaction/rollback handling
 ### Version 1.1
 - [ ] subtask CRUD

@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using api.Interfaces;
 
 namespace api.Models;
 
-public class TaskList
+public class TaskList : IUpdateable
 {
     public int Id { get; set; }
     public List<MyTask> Tasks { get; } = new List<MyTask>();
