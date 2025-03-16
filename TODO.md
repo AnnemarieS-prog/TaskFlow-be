@@ -14,14 +14,19 @@
 - [x] task CRUD
 - [x] task interactions (done & simple prioritize)
 - [ ] user CRUD
-- [ ] simple auth (?)
-- [ ] task list CRUD
+- [ ] simple auth
+- [x] task list CRUD
+- [x] task list interactions (add, remove & move tasks)
+### Version 1.0.5
+- [ ] safe authorization
+- [ ] architecture review
+	- [ ] necessary refactorings
+- [ ] transaction/rollback handling
 ### Version 1.1
 - [ ] subtask CRUD
 - [ ] subtask interactions (done & promote to task)
 - [ ] strict simple schedule to day & time for Due date
 - [ ] specialized task lists (today; important; planned; this week)
-- [ ] task list nesting (?)
 ### Version 1.2
 - [ ] task list groups
 - [ ] task list group nesting
@@ -39,7 +44,7 @@
 - [ ] advanced status tracking
 - [ ] advanced priorization
 - [ ] reminder
-- [ ] safe (!) authorization
 - [ ] search function
 - [ ] undo action (within session)
+- [ ] removing 
 ...

@@ -15,6 +15,7 @@ public static class TaskMapper
             IsCompleted = taskModel.IsCompleted,
             CreatedAt = taskModel.CreatedAt,
             UpdatedAt = taskModel.UpdatedAt,
+            TaskListId = taskModel.TaskListId
         };
     }
 

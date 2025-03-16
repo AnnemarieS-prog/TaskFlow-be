@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -11,9 +12,11 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250316105023_coll")]
+    partial class coll
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,7 +49,7 @@ namespace api.Migrations
                     b.Property<bool>("IsPrioritized")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("TaskListId")
+                    b.Property<int?>("TaskCollectionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -58,12 +61,12 @@ namespace api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TaskListId");
+                    b.HasIndex("TaskCollectionId");
 
                     b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("api.Models.TaskList", b =>
+            modelBuilder.Entity("api.Models.TaskCollection", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -86,19 +89,19 @@ namespace api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TaskLists");
+                    b.ToTable("TaskCollections");
                 });
 
             modelBuilder.Entity("api.Models.MyTask", b =>
                 {
-                    b.HasOne("api.Models.TaskList", "TaskList")
+                    b.HasOne("api.Models.TaskCollection", "TaskCollection")
                         .WithMany("Tasks")
-                        .HasForeignKey("TaskListId");
+                        .HasForeignKey("TaskCollectionId");
 
-                    b.Navigation("TaskList");
+                    b.Navigation("TaskCollection");
                 });
 
-            modelBuilder.Entity("api.Models.TaskList", b =>
+            modelBuilder.Entity("api.Models.TaskCollection", b =>
                 {
                     b.Navigation("Tasks");
                 });

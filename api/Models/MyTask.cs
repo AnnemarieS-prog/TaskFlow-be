@@ -5,8 +5,8 @@ namespace api.Models;
 public class MyTask
 {
     public int Id { get; set; }
-    public int? TaskCollectionId { get; set; }
-    public TaskCollection? TaskCollection { get; set; }
+    public int? TaskListId { get; set; }
+    public TaskList? TaskList { get; set; }
 
     public string Title { get; set; }
     public string Description { get; set; }

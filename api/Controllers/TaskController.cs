@@ -3,6 +3,7 @@ using api.Dtos.Task;
 using api.Mappers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers;
 
@@ -42,8 +43,11 @@ public class TaskController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetById([FromRoute] int id)
     {
-        var task = _context.Tasks.Find(id);
-        if (task == null || task.IsDeleted) return NotFound();
+        var task = _context.Tasks
+            .Where(t => t.DeletedAt == null)
+            .FirstOrDefault(t => t.Id == id);
+
+        if (task == null) return NotFound();
 
         return Ok(task.ToTaskDto());
     }
@@ -51,8 +55,11 @@ public class TaskController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult UpdateById([FromRoute] int id, [FromBody] UpdateTaskRequestDto taskDto) 
     {
-        var task = _context.Tasks.Find(id);
-        if (task == null || task.IsDeleted) return NotFound();
+        var task = _context.Tasks
+            .Where(t => t.DeletedAt == null)
+            .FirstOrDefault(t => t.Id == id);
+
+        if (task == null) return NotFound();
 
         // TODO: post auth-impl => change to Forbid()
         if (task.IsCompleted) return Conflict(new { message = "You're trying to update a task that has already been completed!"});
@@ -67,16 +74,22 @@ public class TaskController : ControllerBase
         {
             task.UpdatedAt = DateTime.UtcNow;
             _context.SaveChanges();
-        }
 
-        return Ok(task.ToTaskDto());
+            return Ok(task.ToTaskDto());
+        } else
+        {
+            return BadRequest("No changes requested.");
+        }
     }
 
     [HttpDelete("{id}")]
     public IActionResult DeleteById([FromRoute] int id)
     {
-        var task = _context.Tasks.Find(id);
-        if (task == null || task.IsDeleted) return NotFound();
+        var task = _context.Tasks
+            .Where(t => t.DeletedAt == null)
+            .FirstOrDefault(t => t.Id == id);
+
+        if (task == null) return NotFound();
 
         task.DeletedAt = DateTime.UtcNow;
         _context.SaveChanges();
